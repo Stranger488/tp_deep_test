@@ -23,14 +23,8 @@ public:
         return true;
     }
 
-    bool replaceWord(const size_t & index, const std::string& word) {
+    bool editWord(const size_t & index, const std::string& word) {
         line.at(index) = word;
-
-        return true;
-    }
-
-    bool editWord(const size_t & index, const std::string& new_value) {
-        line.at(index) = new_value;
 
         return true;
     };
@@ -41,7 +35,7 @@ public:
         return true;
     }
 
-    void drawWord() const {
+    void drawWords() const {
         for (const auto& word : line) {
             std::cout << word << '\t';
         }
@@ -55,7 +49,8 @@ public:
     bool readStrings() {
         std::string buffer_line;
 
-        while (std::getline(std::cin, buffer_line)) {
+        while (!std::cin.eof()) {
+            std::getline(std::cin, buffer_line);
             StringField tmp;
             tmp.readLine(buffer_line);
             strings.push_back(tmp);
@@ -67,11 +62,6 @@ public:
     bool addWordToField(const size_t& indexField, const std::string& word) {
         strings.at(indexField).addWord(word);
 
-        return true;
-    }
-
-    bool replaceWordInField(const size_t& indexWord, const size_t& indexField, const std::string& word) {
-        strings.at(indexField).replaceWord(indexField, word);
 
         return true;
     }
@@ -82,15 +72,19 @@ public:
         return true;
     };
 
-    bool deleteWord(const size_t& index) {
-        strings.erase(strings.begin() + index);
+    bool deleteWordInField(const size_t& indexWord, const size_t& indexField) {
+        strings.at(indexField).deleteWord(indexWord);
 
         return true;
     }
 
+    void drawString(const size_t& index) {
+        strings.at(index).drawWords();
+    }
+
     void drawStrings() {
-        for (auto string_field : strings) {
-            string_field.drawWord();
+        for (const auto& string_field : strings) {
+            string_field.drawWords();
             std::cout << '\n';
         }
     }
@@ -98,12 +92,11 @@ public:
 
 int main() {
     StringFieldsHolder stringFieldsHolder;
-
     stringFieldsHolder.readStrings();
 
-//    stringFieldsHolder.addField(0, 1, "newField");
-//    stringFieldsHolder.editField(4, "editedField");
-//    stringFieldsHolder.deleteField(5);
+    stringFieldsHolder.addWordToField(0, "newField");
+    stringFieldsHolder.editWordInField(0, 0, "editedField");
+    stringFieldsHolder.deleteWordInField(0, 0);
 
     stringFieldsHolder.drawStrings();
 
